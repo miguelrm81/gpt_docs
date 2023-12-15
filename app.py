@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, jsonify, render_template 
 import json
 import requests
 import os
 from datetime import datetime
+import sqlite3
 from variables import API_KEY_CHATGPT
 
 from langchain.chains import AnalyzeDocumentChain
@@ -63,6 +64,29 @@ def chat_gpt_response():
         answer = {'error': error}
 
     return answer
+
+#______________________________________
+
+@app.route('/insert', methods=["POST"])
+def insert_response():
+    data = chat_gpt_response()
+
+    if 'question' in data and 'response' in data and 'time' in data:
+    
+        conn = sqlite3.connect('gpt_docs.db')
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            INSERT INTO chat (time, question, response)
+            VALUES (?, ?, ?);
+        ''', (data['time'], data['question'], data['response']))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': 'Datos insertados correctamente.'})
+    else:
+        return jsonify({'error': 'JSON incorrecto'})
 
 if __name__ == '__main__':
     app.run(debug=True)
