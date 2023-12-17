@@ -47,12 +47,19 @@
         }
     </style>
 </head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar Archivo .py</title>
+</head>
 <body>
 
     <div>
         <h1 style="color: #333333; text-transform: uppercase;">Cargar Archivo .py</h1>
         <input type="file" id="file-input" accept=".py" style="display: none;">
-        <div id="drop-area">
+        <div id="drop-area" style="border: 2px dashed #ccc;">
             Arrastra y suelta el archivo aquí o haz clic para seleccionar uno.
         </div>
         <div id="file-info"></div>
@@ -60,7 +67,6 @@
     </div>
 
     <script>
-        
     var dropArea = document.getElementById('drop-area');
     var fileInput = document.getElementById('file-input');
     var fileInfo = document.getElementById('file-info');
@@ -89,7 +95,6 @@
         displayFileInfo(file);
     });
 
-
     function displayFileInfo(file) {
         fileInfo.innerHTML = '';
         if (file) {
@@ -108,8 +113,21 @@
     function uploadFile() {
         var file = fileInput.files[0] || document.getElementById("file-input").files[0];
         if (file && file.name.toLowerCase().endsWith('.py')) {
-            // Logica para cargar el archivo
-            alert('Archivo cargado con éxito.');
+            var formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+            })
+            .catch(error => {
+                console.error('Error al subir el archivo:', error);
+                alert('Error al subir el archivo.');
+            });
         } else {
             alert('Selecciona un archivo .py válido.');
         }
