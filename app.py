@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, render_template 
 import json
 import requests
+import psycopg2
 import os
 from datetime import datetime
 import sqlite3
-from variables import API_KEY_CHATGPT
+import variables
 
 from langchain.chains import AnalyzeDocumentChain
 from langchain.chat_models import ChatOpenAI
@@ -39,18 +40,30 @@ def upload_file():
         return 'Archivo cargado con éxito en la carpeta "uploads"'
     else:
         return 'Selecciona un archivo .py válido'
+    
+def connect():
 
+    #Set up a connection to the postgres server.
+    conn_string = "host="+ variables.PGEND_POINT + \
+        " port="+ "5432" +" dbname="+ variables.PGDATABASE_NAME + \
+        " user=" + variables.PGUSER_NAME + \
+        " password="+ variables.PGPASSWORD
 
-@app.route('/response', methods=["GET"])
-def chat_gpt_response():
+    conn = psycopg2.connect(conn_string)
+    print("Connected!")
+
+    # Create a cursor object
+    cursor = conn.cursor()
+
+    return conn, cursor
+
+def chat_gpt_response(question):
 
     error = None
     answer = {}
-    # recibir informacion de html question
-    #question = request.json()
-    question_test = "Cuentame que endpoints tiene el archivo"
+    question = question["question"]
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=API_KEY_CHATGPT)
+    llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=variables.API_KEY_CHATGPT)
 
     qa_chain = load_qa_chain(llm, chain_type="map_reduce")
 
@@ -67,11 +80,11 @@ def chat_gpt_response():
 
         response = qa_document_chain.run(
             input_document=file,
-            question=question_test,
+            question=question,
         )
         time = datetime.now()
         answer = {
-            'question': question_test,
+            'question': question,
             'response': response,
             'time': time.isoformat()
         }
@@ -86,30 +99,15 @@ def chat_gpt_response():
 
     return answer
 
-'''{'question': 'Cuentame que endpoints tiene el archivo',
- 'response': 'El archivo tiene los siguientes endpoints:\n\n1. GET \'/\': Muestra un mensaje de bienvenida y crea una tabla llamada "advertising" en una base de datos SQLite si no existe. Luego, agrega datos a la tabla si no hay resultados previos.\n\n2. GET \'/predict\': Carga un modelo de predicción guardado y obtiene los datos de prueba de la base de datos. Realiza una predicción utilizando el modelo y devuelve el resultado.\n\n3. POST \'/ingest\': Recibe datos en formato JSON y los ingiere en la base de datos.\n\n4. POST \'/retrain\': Carga un modelo de predicción guardado y obtiene los datos de entrenamiento de la base de datos. Luego, entrena el modelo nuevamente con los datos actualizados y guarda el modelo entrenado.',
- 'time': '2023-12-14T16:51:52.448581'}'''
-
-#______________________________________
-
 @app.route('/insert', methods=["POST"])
 def insert_response():
-    # Recibo el
     question = request.json
-    
+
     data = chat_gpt_response(question)
 
     if 'question' in data and 'response' in data and 'time' in data:
-    
-        '''db = pymysql.connect(host = host,
-                     user = username,
-                     password = password,
-                     cursorclass = pymysql.cursors.DictCursor)
 
-        cursor = db.cursor()'''
-
-        conn = sqlite3.connect('gpt_docs.db')
-        cursor = conn.cursor()
+        conn, cursor = connect()
 
         cursor.execute('''
             INSERT INTO chat (time, question, response)
@@ -119,7 +117,7 @@ def insert_response():
         conn.commit()
         conn.close()
 
-        return jsonify({'success': 'Datos insertados correctamente.'})
+        return jsonify(data['response'])
     else:
         return jsonify({'error': 'JSON incorrecto'})
 

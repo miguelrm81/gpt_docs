@@ -64,6 +64,13 @@
         </div>
         <div id="file-info"></div>
         <button id="upload-btn" onclick="uploadFile()">Cargar Archivo</button>
+        <div class="container">
+            <h1>Haz tus preguntas sobre el archivo</h1>
+            <label for="question">Introduce tu pregunta:</label>
+            <input type="text" id="question" placeholder="Escribe tu pregunta aquí">
+            <button onclick="consultarAPI()">Enviar</button>
+            <div id="respuesta"></div>
+        </div>
     </div>
 
     <script>
@@ -71,6 +78,7 @@
     var fileInput = document.getElementById('file-input');
     var fileInfo = document.getElementById('file-info');
     var uploadButton = document.getElementById('upload-btn');
+    var contentContainer = document.getElementById('content-container');
 
     // Configurar arrastrar y soltar
     dropArea.addEventListener('dragover', function (e) {
@@ -132,6 +140,17 @@
             alert('Selecciona un archivo .py válido.');
         }
     }
+
+    function consultarAPI() {
+        var pregunta = document.getElementById('question').value;
+        var respuestaContainer = document.getElementById('respuesta');
+        // Aqui tengo que poner la funcion de los resultados de la api
+        var respuestaDeLaAPI = "Respuesta de la API para: '" + pregunta + "'";
+
+        // Mostrar la respuesta en el contenedor
+        respuestaContainer.innerHTML = respuestaDeLaAPI;
+    }
+
     </script>
 </body>
 </html>
