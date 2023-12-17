@@ -65,14 +65,28 @@ def chat_gpt_response():
 
     return answer
 
+'''{'question': 'Cuentame que endpoints tiene el archivo',
+ 'response': 'El archivo tiene los siguientes endpoints:\n\n1. GET \'/\': Muestra un mensaje de bienvenida y crea una tabla llamada "advertising" en una base de datos SQLite si no existe. Luego, agrega datos a la tabla si no hay resultados previos.\n\n2. GET \'/predict\': Carga un modelo de predicción guardado y obtiene los datos de prueba de la base de datos. Realiza una predicción utilizando el modelo y devuelve el resultado.\n\n3. POST \'/ingest\': Recibe datos en formato JSON y los ingiere en la base de datos.\n\n4. POST \'/retrain\': Carga un modelo de predicción guardado y obtiene los datos de entrenamiento de la base de datos. Luego, entrena el modelo nuevamente con los datos actualizados y guarda el modelo entrenado.',
+ 'time': '2023-12-14T16:51:52.448581'}'''
+
 #______________________________________
 
 @app.route('/insert', methods=["POST"])
 def insert_response():
-    data = chat_gpt_response()
+    # Recibo el
+    question = request.json
+    
+    data = chat_gpt_response(question)
 
     if 'question' in data and 'response' in data and 'time' in data:
     
+        '''db = pymysql.connect(host = host,
+                     user = username,
+                     password = password,
+                     cursorclass = pymysql.cursors.DictCursor)
+
+        cursor = db.cursor()'''
+
         conn = sqlite3.connect('gpt_docs.db')
         cursor = conn.cursor()
 
