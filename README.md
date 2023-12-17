@@ -54,5 +54,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"documento": "Contenido de
 Construye la imagen Docker y súbelo a DockerHub.
 
 docker build -t tu-usuario/tu-proyecto:latest .
+
 docker push tu-usuario/tu-proyecto:latest
+
 Ahora, otros usuarios pueden desplegar la aplicación utilizando Docker.
