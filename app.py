@@ -13,12 +13,33 @@ from langchain.chains.question_answering import load_qa_chain
 
 os.chdir(os.path.dirname(__file__))
 
-app = Flask(__name__, template_folder='src/templates')
+#path_upload=os.getcwd()+'/4-Data_Engineering/Entregas/uploads'
+path_upload=os.getcwd()+'\\uploads'
 
-@app.route('/', methods=['GET', 'POST'])
+app = Flask(__name__, template_folder='templates')
+
+@app.route('/')
+def index():
+    return render_template('template.html')
+
+@app.route('/upload', methods=['POST'])
 def upload_file():
+    if 'file' not in request.files:
+        return 'No se ha enviado ningún archivo'
 
-    return "Aqui va en render template"
+    file = request.files['file']
+
+    if file.filename == '':
+        return 'No se ha seleccionado ningún archivo'
+
+    if file and file.filename.endswith('.py'):
+        filename = os.path.join(path_upload, file.filename)
+        file.save(filename)
+        print(filename)
+        return 'Archivo cargado con éxito en la carpeta "uploads"'
+    else:
+        return 'Selecciona un archivo .py válido'
+
 
 @app.route('/response', methods=["GET"])
 def chat_gpt_response():
