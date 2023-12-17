@@ -30,6 +30,7 @@ Antes de comenzar con la implementación de la aplicación, asegúrate de tener 
 ### 1. Clonar el Repositorio:
 
 git clone [https://github.com/tu-usuario/tu-proyecto.git](https://github.com/miguelrm81/gpt_docs.git)
+
 cd tu-proyecto
 
 ### 2. Configuración del Entorno:
