@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CARGAR ARCHIVO .PY</title>
+    <style>
+        body {
+            background-color: #f0f0f0; /* Color de fondo */
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #drop-area {
+            border: 2px dashed #c07b7b;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #ffffff; /* Color de fondo del area de soltar */
+            margin-top: 20px;
+            width: 30%; 
+            height: 80px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #drop-area:hover {
+            background-color: #e0e0e0; /* Cambiar el color al pasar el raton por encima */
+        }
+
+        #file-info {
+            margin-top: 10px;
+        }
+
+        #upload-btn {
+            padding: 10px;
+            background-color: #4caf50; /* Color de fondo del botón */
+            color: white; /* Color de texto del botón */
+            border: none;
+            cursor: pointer;
+        }
+
+        #upload-btn:hover {
+            background-color: #45a049; /* Cambiar el color al pasar el ratón por encima */
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1 style="color: #333333; text-transform: uppercase;">Cargar Archivo .py</h1>
+        <input type="file" id="file-input" accept=".py" style="display: none;">
+        <div id="drop-area">
+            Arrastra y suelta el archivo aquí o haz clic para seleccionar uno.
+        </div>
+        <div id="file-info"></div>
+        <button id="upload-btn" onclick="uploadFile()">Cargar Archivo</button>
+    </div>
+
+    <script>
+        
+    var dropArea = document.getElementById('drop-area');
+    var fileInput = document.getElementById('file-input');
+    var fileInfo = document.getElementById('file-info');
+    var uploadButton = document.getElementById('upload-btn');
+
+    // Configurar arrastrar y soltar
+    dropArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropArea.style.border = '2px dashed #000';
+    });
+
+    dropArea.addEventListener('dragleave', function (e) {
+        e.preventDefault();
+        dropArea.style.border = '2px dashed #ccc';
+    });
+
+    dropArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropArea.style.border = '2px dashed #ccc';
+        var file = e.dataTransfer.files[0];
+        displayFileInfo(file);
+    });
+
+    fileInput.addEventListener('change', function () {
+        var file = fileInput.files[0];
+        displayFileInfo(file);
+    });
+
+
+    function displayFileInfo(file) {
+        fileInfo.innerHTML = '';
+        if (file) {
+            fileInfo.innerHTML += '<p>Nombre: ' + file.name + '</p>';
+            fileInfo.innerHTML += '<p>Tipo: ' + file.type + '</p>';
+            fileInfo.innerHTML += '<p>Tamaño: ' + file.size + ' bytes</p>';
+        } else {
+            fileInfo.innerHTML = 'No se ha seleccionado ningún archivo.';
+        }
+    }
+
+    dropArea.addEventListener('click', function () {
+        fileInput.click();
+    });
+
+    function uploadFile() {
+        var file = fileInput.files[0] || document.getElementById("file-input").files[0];
+        if (file && file.name.toLowerCase().endsWith('.py')) {
+            // Logica para cargar el archivo
+            alert('Archivo cargado con éxito.');
+        } else {
+            alert('Selecciona un archivo .py válido.');
+        }
+    }
+    </script>
+</body>
+</html>
