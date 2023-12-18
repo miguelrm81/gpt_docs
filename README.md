@@ -37,10 +37,10 @@ git clone [https://github.com/tu-usuario/tu-proyecto.git](https://github.com/mig
 Configura las variables de entorno necesarias, como las claves de API de Langchain y OpenAI, así como las credenciales de AWS para acceder a la base de datos.
 ### 3. Instalación de Dependencias:
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 ### 4. Ejecución de la Aplicación:
 
-python app.py
+`python app.py`
 ### 5. Acceso a la Interfaz de Usuario:
 
 Abre tu navegador y visita http://localhost:5000 para interactuar con la interfaz de usuario.
@@ -50,6 +50,6 @@ Realiza peticiones HTTP al endpoint para automatizar consultas.
 
 ### 7. Despliegue con Docker:
 
-docker pull javieralcazar/docker-api-gpt:v0
+`docker pull javieralcazar/docker-api-gpt:v0`
 
-docker run -p 5000:5000 javieralcazar/docker-api-gpt:v0
+`docker run -p 5000:5000 javieralcazar/docker-api-gpt:v0`
