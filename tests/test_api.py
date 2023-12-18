@@ -28,4 +28,3 @@ def test_get_record():
     assert isinstance(json_data["question"], str), "La clave 'question' debe ser una cadena de caracteres."
     assert isinstance(json_data["response"], str), "La clave 'response' debe ser una cadena de caracteres."
 
-

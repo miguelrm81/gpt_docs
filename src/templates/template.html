@@ -69,12 +69,13 @@
             <label for="question">Introduce tu pregunta:</label>
             <input type="text" id="question" placeholder="Escribe tu pregunta aquí">
             <button onclick="getResponse()">Enviar</button>
+            <div><br><br></div>
             <div id="response"></div>
         </div>
     </div>
 
     <div>
-        <h1>Listado de Preguntas y Respuestas</h1>
+        <h1>Historial de preguntas y respuestas</h1>
         <ul id="record_list"></ul>
     </div>
     <script>
@@ -87,40 +88,27 @@
     const messageForm = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     
-    const responseDiv = document.getElementById('response')
     function uploadRecord() {
-        document.addEventListener('DOMContentLoaded', function () {
         fetch('/record')
-            .then(response => response.json())
-            .then(data => {
-                const lista = document.getElementById('record_list');
-                data.forEach(item => {
-                    const listItem = document.createElement('div');
-                    listItem.innerHTML = `<strong>Fecha:</strong> ${item.time} <br>
-                    <strong>Pregunta:</strong> ${item.question} <br>
-                    <strong>Respuesta:</strong> ${item.response}
-                    <div> <br><br> </div>
-                    `;
-                    
-                    lista.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error al obtener datos:', error));
-        });
-    };
-    
-    
-    function updateRecord() {
-        uploadRecord()
+        .then(response => response.json())
+        .then(data => {
+            const lista = document.getElementById('record_list');
+            const reversedData = data.reverse();
+
+            lista.innerHTML = ''; // Limpiar contenido existente antes de agregar nuevos elementos
+
+            reversedData.forEach(item => {
+                const listItem = document.createElement('div');
+                listItem.innerHTML = `<strong>Fecha:</strong> ${item.time} <br>
+                                      <strong>Pregunta:</strong> ${item.question} <br>
+                                      <strong>Respuesta:</strong> ${item.response}
+                                      <div> <br><br> </div>`;
+
+                lista.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error al obtener datos:', error));
     }
-
-    const observer = new MutationObserver(updateRecord);
-
-    // Configurar las opciones del observador (detectar cambios en el contenido)
-    const observerOptions = { childList: true, subtree: true };
-
-    // Iniciar el observador de mutación en el div 'response'
-    observer.observe(responseDiv, observerOptions);
 
     uploadRecord();
     
@@ -200,6 +188,7 @@
                 var resAPI = response ;
 
                 resContainer.innerHTML = resAPI;
+                uploadRecord()
             })
             .catch(error => {
                 console.error('Error al guardar la pregunta:', error);
