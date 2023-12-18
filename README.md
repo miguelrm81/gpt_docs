@@ -46,9 +46,8 @@ python app.py
 Abre tu navegador y visita http://localhost:5000 para interactuar con la interfaz de usuario.
 ### 6. Uso del Endpoint de API:
 
-Realiza peticiones HTTP al endpoint para automatizar consultas. Ejemplo:
+Realiza peticiones HTTP al endpoint para automatizar consultas.
 
-curl -X POST -H "Content-Type: application/json" -d '{"documento": "Contenido del documento", "pregunta": "¿Cuál es la pregunta?"}' http://localhost:5000/api/consultar
 ### 7. Despliegue con Docker:
 
 
