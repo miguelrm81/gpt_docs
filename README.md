@@ -51,10 +51,8 @@ Realiza peticiones HTTP al endpoint para automatizar consultas. Ejemplo:
 curl -X POST -H "Content-Type: application/json" -d '{"documento": "Contenido del documento", "pregunta": "¿Cuál es la pregunta?"}' http://localhost:5000/api/consultar
 ### 7. Despliegue con Docker:
 
-Construye la imagen Docker y súbelo a DockerHub.
 
 docker build -t tu-usuario/tu-proyecto:latest .
 
 docker push tu-usuario/tu-proyecto:latest
 
-Ahora, otros usuarios pueden desplegar la aplicación utilizando Docker.
