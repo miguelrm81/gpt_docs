@@ -50,8 +50,6 @@ Realiza peticiones HTTP al endpoint para automatizar consultas.
 
 ### 7. Despliegue con Docker:
 
+docker pull javieralcazar/docker-api-gpt:v0
 
-docker build -t tu-usuario/tu-proyecto:latest .
-
-docker push tu-usuario/tu-proyecto:latest
-
+docker run -p 5000:5000 javieralcazar/docker-api-gpt:v0
